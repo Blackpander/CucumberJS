@@ -1,15 +1,21 @@
-Feature:
-	I would like to monitor several websites
-	and validate that their titles are as expected.
+# features/simple_math.feature
+Feature: Simple maths
+  In order to do maths
+  As a developer
+  I want to increment variables
 
-	Scenario: httpbin.org website should be up and running
-		Given I visit httpbin.org website
-		Then website title should be "httpbin(1): HTTP Client Testing Service"
+  Scenario: easy maths
+    Given a variable set to 1
+    When I increment the variable by 1
+    Then the variable should contain 2
 
-	Scenario: github.com website should be up and running
-		Given I visit github.com website
-		Then website title should be "How people build software · GitHub"
+  Scenario Outline: much more complex stuff
+    Given a variable set to <var>
+    When I increment the variable by <increment>
+    Then the variable should contain <result>
 
-	Scenario: wikipedia.org site should be up and running
-		Given I visit www.wikipedia.org website
-		Then website title should be "Wikipedia"
+    Examples:
+      | var | increment | result |
+      | 100 |         5 |    105 |
+      |  99 |      1234 |   1333 |
+      |  12 |         5 |     17 |

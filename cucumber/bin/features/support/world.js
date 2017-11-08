@@ -1,0 +1,22 @@
+// features/support/world.js
+var seleniumWebdriver = require('selenium-webdriver');
+    chrome    = require('selenium-webdriver/chrome')
+    options   = new chrome.Options();
+    options.addArguments('headless'); // note: without dashes
+    options.addArguments('disable-gpu')
+    // options.addArguments('--start-fullscreen')
+    options.addArguments('--window-size=1920,1080')
+
+var {defineSupportCode} = require('cucumber');
+
+function CustomWorld() {
+  this.driver = new seleniumWebdriver.Builder()
+    .forBrowser('chrome')
+    .setChromeOptions(options)
+    .build();
+}
+
+defineSupportCode(function({setWorldConstructor}) {
+  setWorldConstructor(CustomWorld)
+})
+

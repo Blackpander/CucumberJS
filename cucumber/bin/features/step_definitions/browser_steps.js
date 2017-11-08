@@ -1,0 +1,80 @@
+// features/step_definitions/browser_steps.js
+
+//Selenium Webdriver
+var seleniumWebdriver = require('selenium-webdriver');
+
+//Selectors for CSS, ID and xPath
+By = seleniumWebdriver.By;
+var { defineSupportCode } = require('cucumber');
+
+//Variables for assertions
+var chai = require('chai');
+var expect = chai.expect;
+var assert = chai.assert;
+
+//Fucntions for random integers
+function getRand(getal){
+  return Math.floor(Math.random() * getal);
+}
+function randArt(getal){
+  return Math.floor(((Math.random() * getal) + 1)/2);
+}
+
+//Defining the Gherkin implementation
+defineSupportCode(function ({Given, When, Then, setDefaultTimeout}) {
+
+  //Setting the timeout for Cucumber JS
+  setDefaultTimeout(10 * 1000);
+  Given('I am on the {string} homepage', function (string) {
+    this.driver.get(string);
+    return assert(this.driver.findElement(By.css('#search-input')).isDisplayed());
+  });
+
+  When('I search for {string}', function (string) {
+    //Assert if element is displayed
+    assert(this.driver.findElement(By.css('#search-input')).isDisplayed());
+    //Send input from string to the search field
+    this.driver.findElement(By.css('#search-input')).sendKeys(string);
+    //Click on the "Google Zoeken"-button to search
+    return this.driver.findElement(By.css('#filter-submit-label')).click();
+  });
+
+  Then('I should assert if {string} is found', function (string) {
+    //Assert if the page contains the string from the test scenario
+    var results = this.driver.findElement(By.xpath("//*[contains(text(),'" + string + "')]")).isDisplayed();
+    assert(results);
+  });
+
+  Then('I click on a random vacancie', function () {
+    //A loop for getting all the vacancie urls
+    var hreflist = [];
+    myDriver = this.driver;
+    var x = this.driver.findElements(By.css('#vacancies a')).then(function(elements) {
+      elements.forEach(function (element) {
+        element.getAttribute('href').then(function(text) {
+          //Pushing all urls to a list
+          hreflist.push(text);
+        });
+      });
+    }).then(function(){
+      //Putting the lenght of the href list into the random function to click on a random vacancie
+      selector = "div.grid:nth-child(1) div:nth-child(" + randArt(hreflist.length) +  ") a";
+      myDriver.findElement(By.css(selector)).click();
+    });
+  });
+  Then('I click on Solliciteer', function () {
+    this.driver.findElement(By.css('button.btn-apply-label:nth-child(1)')).click();
+  });
+  Then('I fill in the form with {string}, {string}, {string}, {string} and {string}', function (string, string2, string3, string4, string5) {
+    // Write code here that turns the phrase above into concrete actions
+    this.driver.findElement(By.css('#first-name_-1525226443')).sendKeys(string);
+    this.driver.findElement(By.css('#last-name_-692889215')).sendKeys(string2);
+    this.driver.findElement(By.css('#email_2005555419')).sendKeys(string3);
+    this.driver.findElement(By.css('#PHONE_-1776671662')).sendKeys(string4);
+    return this.driver.findElement(By.css('#COVERLETTERTXT_235657603')).sendKeys(string5);
+  });
+  Then('I go back to the homepage', function () {
+    // Write code here that turns the phrase above into concrete actions
+    return this.driver.findElement(By.css('.site-header-desktop a img')).click();
+  });
+});
